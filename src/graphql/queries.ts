@@ -1,7 +1,7 @@
-import { gql } from '@apollo/client/core';
+import { gql } from '@apollo/client/core'
 
-const limit: number = 12;
-const isFilter: boolean = false;
+const limit: number = 12
+const isFilter: boolean = false
 
 export const POKEMONS = gql`
 {
@@ -17,7 +17,7 @@ export const POKEMONS = gql`
       back_default    
     }
   }
-}`;
+}`
 
 export const getMorePokemon = (limit: number) => {
   return gql`
@@ -36,5 +36,5 @@ export const getMorePokemon = (limit: number) => {
         back_shiny
       }
     }
-  }`;
+  }`
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from './pokedex-redux/store'
-import { putPokemonList, queryPokemonStateList } from './pokedex-redux/PokemenReducer'
+import { putPokemonList, queryPokemonStateList, searchPokemonStateList } from './pokedex-redux/PokemenReducer'
 
 import { useQuery } from '@apollo/client/react/hooks'
 
@@ -21,26 +21,40 @@ import LoadMore from './component/LoadMore'
 import Loader from './component/Loader'
 import AlertMessage from './component/AlertMessage'
 import { INITIAL_OFFSET, LIST_LIMIT } from './util/constants'
+import Search from './component/Search'
 
 function App () {
   const allPokemonsLoaded = useSelector((state: RootState) => state.pokemons.allPokemonsLoaded)
   const queryPokemons = useSelector((state: RootState) => state.pokemons.queryPokemons)
+  const refreshList = useSelector((state: RootState) => state.pokemons.refreshList)
   const dispatch = useDispatch()
 
   const [offset, setOffset] = useState<number>(INITIAL_OFFSET)
+  const [searchWord, setSearchWord] = useState<string>('')
   const { loading, error, data } = useQuery<PokemanResult>(getMorePokemon(-1))
   const [moreLoadingPressed, setMoreLoadingPressed] = useState<boolean>(false)
 
   useEffect(() => {
     dispatch(queryPokemonStateList({ offset, limit: LIST_LIMIT }))
+    console.log(refreshList)
   }, [allPokemonsLoaded, offset])
+
+  // useEffect(() => {
+  //   console.log('Search refresh')
+  // }, [refreshList])
 
   const loadMorePokemon = useCallback(() => {
     console.log('loadMorePokemon called')
     setMoreLoadingPressed(true)
     setOffset(offset + LIST_LIMIT)
-    // setPokemonListQuery({offset: offset + LIST_LIMIT, limit: LIST_LIMIT })
   }, [offset])
+
+  const searchPokemon = useCallback(() => {
+    console.log('searchPokemon with searchWord ' + searchWord)
+    setMoreLoadingPressed(true)
+    dispatch(searchPokemonStateList({ offset: 0, limit: 12, searchWord }))
+    setOffset(0)
+  }, [searchWord])
 
   // The reference will be used to detect list end
   const intersecObserver = useRef<IntersectionObserver | null>(null)
@@ -70,7 +84,7 @@ function App () {
     dispatch(putPokemonList(data.allPokemon))
   }
 
-  if (queryPokemons && queryPokemons.length > 1) {
+  if (queryPokemons && queryPokemons.length > 0 && queryPokemons[0].id !== '0') {
     MainLayout = <Row>
     {queryPokemons.map((pokemon, index) => {
       if (queryPokemons.length === index + 1) {
@@ -94,7 +108,8 @@ function App () {
     <Container>
       <Header />
       <Row className="justify-content-center">
-        <Col><h2>Search and Filter</h2></Col>
+        <Search searchPokemon={searchPokemon} setSearchWord={(value: string) => { console.log(value); setSearchWord(value) } }/>
+        <Col><h2>Filter</h2></Col>
       </Row>
       {MainLayout}
       {MoreLoadingLayout}

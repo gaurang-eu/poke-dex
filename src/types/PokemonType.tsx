@@ -1,4 +1,4 @@
 export interface PokemonType {
-    id: string,
-    name: string
-  }
+  id: string
+  name: string
+}

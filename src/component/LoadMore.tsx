@@ -1,27 +1,28 @@
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import React from 'react'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 import Spinner from 'react-bootstrap/Spinner'
 
-import Button from 'react-bootstrap/Button';
+import Button from 'react-bootstrap/Button'
 
-function LoadMore(props: { loadMorePokemon: () => void, showLoadMoreButton: boolean }) {
-    let LoadMoreLayout = <Row className='mt-2 mb-2'>
+function LoadMore (props: { loadMorePokemon: () => void, showLoadMoreButton: boolean }) {
+  let LoadMoreLayout = <Row className='mt-2 mb-2'>
         <Col className='d-flex justify-content-center'>
             <Spinner variant='success' />
         </Col>
     </Row>
-    if (props.showLoadMoreButton) {
-        LoadMoreLayout = <Row className='mt-2 mb-2'>
+  if (props.showLoadMoreButton) {
+    LoadMoreLayout = <Row className='mt-2 mb-2'>
             <Col className='d-flex justify-content-center'>
                 <Button variant="primary" onClick={props.loadMorePokemon}>Load more Pokemon</Button>
             </Col>
         </Row>
-    }
-    return (
+  }
+  return (
         <>
             {LoadMoreLayout}
         </>
-    );
+  )
 }
 
-export default LoadMore;
+export default LoadMore
