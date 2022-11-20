@@ -6,10 +6,10 @@ import { Button } from 'react-bootstrap'
 
 function Search (props: { searchPokemon: () => void, setSearchWord: (value: string) => void }) {
   return (
-        <Col>
+        <Col xxs={12} xs={12} md={6} lg={4} xl={3} xxl={3}>
             <Row>
                 <Col className="d-flex justify-content-center">
-                    <Form.Control type="text" placeholder="Enter Pokemon Name" onChange={e => props.setSearchWord(e.target.value.toLowerCase().trim())} />
+                    <Form.Control type="text" placeholder="Pokemon Name" onChange={e => props.setSearchWord(e.target.value.toLowerCase().trim())} />
                 </Col>
                 <Col className="d-flex justify-content-start">
                     <Button onClick={props.searchPokemon}>Search</Button>

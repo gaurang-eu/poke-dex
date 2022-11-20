@@ -8,6 +8,12 @@
         "standard-with-typescript"
     ],
     "overrides": [
+        {
+            "files": ["src/pokedex-redux/PokemonReducer.ts"],
+            "rules": {
+                "eqeqeq": ["off"]
+            }
+        }
     ],
     "parserOptions": {
         "ecmaVersion": "latest",

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from './pokedex-redux/store'
-import { putPokemonList, queryPokemonStateList, searchPokemonStateList } from './pokedex-redux/PokemenReducer'
+import { putPokemonList, searchPokemonStateList } from './pokedex-redux/PokemonReducer'
 
 import { useQuery } from '@apollo/client/react/hooks'
 
@@ -10,7 +10,6 @@ import './App.css'
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import PokemonCard from './component/PokemonCard'
 
 import Header from './component/Header'
@@ -22,26 +21,22 @@ import Loader from './component/Loader'
 import AlertMessage from './component/AlertMessage'
 import { INITIAL_OFFSET, LIST_LIMIT } from './util/constants'
 import Search from './component/Search'
+import PokemonFilter from './component/PokemonFilter'
 
 function App () {
   const allPokemonsLoaded = useSelector((state: RootState) => state.pokemons.allPokemonsLoaded)
   const queryPokemons = useSelector((state: RootState) => state.pokemons.queryPokemons)
-  const refreshList = useSelector((state: RootState) => state.pokemons.refreshList)
   const dispatch = useDispatch()
 
   const [offset, setOffset] = useState<number>(INITIAL_OFFSET)
   const [searchWord, setSearchWord] = useState<string>('')
+  const [filterType, setFilterType] = useState<string>('')
   const { loading, error, data } = useQuery<PokemanResult>(getMorePokemon(-1))
   const [moreLoadingPressed, setMoreLoadingPressed] = useState<boolean>(false)
 
   useEffect(() => {
-    dispatch(queryPokemonStateList({ offset, limit: LIST_LIMIT }))
-    console.log(refreshList)
+    dispatch(searchPokemonStateList({ offset, limit: LIST_LIMIT, searchWord, filterType }))
   }, [allPokemonsLoaded, offset])
-
-  // useEffect(() => {
-  //   console.log('Search refresh')
-  // }, [refreshList])
 
   const loadMorePokemon = useCallback(() => {
     console.log('loadMorePokemon called')
@@ -51,10 +46,18 @@ function App () {
 
   const searchPokemon = useCallback(() => {
     console.log('searchPokemon with searchWord ' + searchWord)
-    setMoreLoadingPressed(true)
-    dispatch(searchPokemonStateList({ offset: 0, limit: 12, searchWord }))
+    setMoreLoadingPressed(false)
+    dispatch(searchPokemonStateList({ offset: 0, limit: 12, searchWord, filterType }))
     setOffset(0)
-  }, [searchWord])
+  }, [searchWord, filterType])
+
+  const filterPokemonByType = useCallback((selectPokemonType: string) => {
+    console.log('filterPokemonByType filterType= ' + selectPokemonType)
+    setMoreLoadingPressed(false)
+    dispatch(searchPokemonStateList({ offset: 0, limit: 12, searchWord, filterType: selectPokemonType }))
+    setFilterType(selectPokemonType)
+    setOffset(0)
+  }, [searchWord, filterType])
 
   // The reference will be used to detect list end
   const intersecObserver = useRef<IntersectionObserver | null>(null)
@@ -107,12 +110,12 @@ function App () {
   return (
     <Container>
       <Header />
-      <Row className="justify-content-center">
+      <Row className="justify-content-center p-1 bg-info">
         <Search searchPokemon={searchPokemon} setSearchWord={(value: string) => { console.log(value); setSearchWord(value) } }/>
-        <Col><h2>Filter</h2></Col>
+        <PokemonFilter filterPokemonByType={filterPokemonByType} />
       </Row>
       {MainLayout}
-      {MoreLoadingLayout}
+      {queryPokemons && queryPokemons.length > 11 && MoreLoadingLayout}
     </Container>
   )
 }
