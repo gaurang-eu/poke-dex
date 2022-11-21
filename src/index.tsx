@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import App from './App'
 import reportWebVitals from './reportWebVitals'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
@@ -10,6 +9,9 @@ import { ApolloClient, InMemoryCache } from '@apollo/client'
 
 import { store } from './pokedex-redux/store'
 import { Provider } from 'react-redux'
+
+import { BrowserRouter } from 'react-router-dom'
+import Main from './Main'
 
 const client = new ApolloClient({
   uri: 'https://dex-server.herokuapp.com/graphql/',
@@ -21,11 +23,13 @@ const root = ReactDOM.createRoot(
 )
 root.render(
   <React.StrictMode>
+    <BrowserRouter>
     <Provider store={store}>
     <ApolloProvider client={client}>
-      <App />
+      <Main />
     </ApolloProvider>
     </Provider>
+    </BrowserRouter>
   </React.StrictMode>
 )
 

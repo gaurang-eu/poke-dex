@@ -1,5 +1,6 @@
 export const LIST_LIMIT = 12
 export const INITIAL_OFFSET = 0
+export const FAVOURITE_POKEMONS_KEY = 'FAVOURITE_POKEMONS'
 export const POKEMON_TYPES = [
   {
     id: '18',

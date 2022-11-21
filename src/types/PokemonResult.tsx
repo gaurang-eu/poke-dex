@@ -1,5 +1,5 @@
-import { PokemonData } from "./PokemonData";
+import { PokemonData } from './PokemonData'
 
 export interface PokemanResult {
-    allPokemon: Array<PokemonData>;
-  }
+  allPokemon: PokemonData[]
+}

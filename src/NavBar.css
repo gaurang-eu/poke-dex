@@ -1,0 +1,9 @@
+.nav-link-div {
+
+}
+
+.nav-link-div > a {
+  margin-right: 20%;
+  list-style: none;
+  color: white;
+}

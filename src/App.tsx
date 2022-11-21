@@ -7,12 +7,8 @@ import { putPokemonList, searchPokemonStateList } from './pokedex-redux/PokemonR
 import { useQuery } from '@apollo/client/react/hooks'
 
 import './App.css'
-
-import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import PokemonCard from './component/PokemonCard'
-
-import Header from './component/Header'
 
 import { PokemanResult } from './types/PokemonResult'
 import { getMorePokemon } from './graphql/queries'
@@ -82,21 +78,21 @@ function App () {
   if (!moreLoadingPressed && loading) {
     MainLayout = <Loader />
   } else if (error != null) {
-    MainLayout = <AlertMessage message={error.message} />
+    MainLayout = <AlertMessage message={`No data available for now. Please check your internet connection: ${error.message}`} />
   } else if ((data != null) && data.allPokemon) {
     dispatch(putPokemonList(data.allPokemon))
   }
 
   if (queryPokemons && queryPokemons.length > 0 && queryPokemons[0].id !== '0') {
-    MainLayout = <Row>
+    MainLayout = <Row className='d-flex justify-content-center'>
     {queryPokemons.map((pokemon, index) => {
       if (queryPokemons.length === index + 1) {
         return (
-          <PokemonCard key={pokemon.id} ref={lastPokemonRef} front_default={pokemon.sprites.front_default} back_default={pokemon.sprites.back_default} name={pokemon.name} id={pokemon.id} types={pokemon.types} />
+          <PokemonCard key={pokemon.id} ref={lastPokemonRef} frontDefault={pokemon.sprites.front_default} backDefault={pokemon.sprites.back_default} name={pokemon.name} id={pokemon.id} types={pokemon.types} />
         )
       }
       return (
-        <PokemonCard key={pokemon.id} front_default={pokemon.sprites.front_default} back_default={pokemon.sprites.back_default} name={pokemon.name} id={pokemon.id} types={pokemon.types} />
+        <PokemonCard key={pokemon.id} frontDefault={pokemon.sprites.front_default} backDefault={pokemon.sprites.back_default} name={pokemon.name} id={pokemon.id} types={pokemon.types} />
       )
     })}</Row>
   }
@@ -108,15 +104,14 @@ function App () {
   }
 
   return (
-    <Container>
-      <Header />
-      <Row className="justify-content-center p-1 bg-info">
+    <>
+      <Row className="justify-content-center p-1 mb-4">
         <Search searchPokemon={searchPokemon} setSearchWord={(value: string) => { console.log(value); setSearchWord(value) } }/>
         <PokemonFilter filterPokemonByType={filterPokemonByType} />
       </Row>
       {MainLayout}
       {queryPokemons && queryPokemons.length > 11 && MoreLoadingLayout}
-    </Container>
+      </>
   )
 }
 
