@@ -23,6 +23,7 @@ const initialState: PokemonState = {
   allPokemonsLoaded: false,
   pokemonListLenght: 0,
   queryPokemons: initialPokemonResult,
+  favouritePokemons: initialPokemonResult,
   searchWord: '',
   filterType: '',
   sortByField: '',
@@ -52,12 +53,13 @@ export const pokemonSlice = createSlice({
       state.pokemonListLenght = action.payload.length
       state.allPokemonsLoaded = true
     },
-    queryPokemonStateList: (state, action: PayloadAction<PokemonStateQueryType>) => {
-      console.log('action.payload ', action.payload)
-      if (state.queryPokemons && state.queryPokemons.length === 1) {
-        state.queryPokemons = [...state.allPokemons.slice(action.payload.offset, action.payload.offset + action.payload.limit)]
-      } else {
-        state.queryPokemons = [...state.queryPokemons, ...state.allPokemons.slice(action.payload.offset, action.payload.offset + action.payload.limit)]
+    getFavouriteList: (state, action: PayloadAction<string[]>) => {
+      console.log('getFavouriteList payload ', action.payload)
+      if (action.payload) {
+        if (action.payload.length > 0) {
+          const favouriteIds: string[] = action.payload
+          state.favouritePokemons = [...state.allPokemons.filter(pokemon => favouriteIds.includes(pokemon.id))]
+        }
       }
     },
     searchPokemonStateList: (state, action: PayloadAction<PokemonStateQueryType>) => {
@@ -166,6 +168,6 @@ export const pokemonSlice = createSlice({
   }
 })
 
-export const { putPokemonList, queryPokemonStateList, searchPokemonStateList } = pokemonSlice.actions
+export const { putPokemonList, searchPokemonStateList, getFavouriteList } = pokemonSlice.actions
 
 export default pokemonSlice.reducer

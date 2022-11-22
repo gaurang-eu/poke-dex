@@ -5,6 +5,7 @@ export interface PokemonState {
   allPokemonsLoaded: boolean
   pokemonListLenght: number
   queryPokemons: PokemonData[]
+  favouritePokemons: PokemonData[]
   searchWord: string
   filterType: string
   sortByField: string

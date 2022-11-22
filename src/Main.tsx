@@ -6,15 +6,41 @@ import Header from './component/Header'
 import Favourite from './Favourite'
 import NavBar from './NavBar'
 
-const Main = () => {
+import { useQuery } from '@apollo/client/react/hooks'
+import { PokemanResult } from './types/PokemonResult'
+import { getMorePokemon } from './graphql/queries'
+import Loader from './component/Loader'
+import AlertMessage from './component/AlertMessage'
+
+import { useDispatch } from 'react-redux'
+// import { RootState } from './pokedex-redux/store'
+import { putPokemonList } from './pokedex-redux/PokemonReducer'
+
+function Main () {
+  const { loading, error, data } = useQuery<PokemanResult>(getMorePokemon(-1))
+  // const queryPokemons = useSelector((state: RootState) => state.pokemons.queryPokemons)
+  const dispatch = useDispatch()
+
+  let PlaceholderLayout = null
+
+  if (loading) {
+    PlaceholderLayout = <Loader />
+  } else if (error != null) {
+    PlaceholderLayout = <AlertMessage message={`No data available for now. Please check your internet connection: ${error.message}`} />
+  } else if ((data != null) && data.allPokemon) {
+    dispatch(putPokemonList(data.allPokemon))
+    // PlaceholderLayout =
+  }
+
   return (
     <Container>
       <Header />
       <NavBar/>
+      {PlaceholderLayout}
       <Routes>
-        <Route path='/' element={<App />} />
-        <Route path='/favourite' element={<Favourite/>} />
-      </Routes>
+      <Route path='/' element={<App loading={loading}/>} />
+      <Route path='/favourite' element={<Favourite />} />
+    </Routes>
     </Container>
   )
 }

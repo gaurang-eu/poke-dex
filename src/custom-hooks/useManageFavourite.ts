@@ -58,9 +58,20 @@ export default function useManageFatourite () {
     }
   }, [])
 
+  const getFavourites = useCallback(() => {
+    let favourites = []
+    try {
+      const tempFavs = localStorage.getItem(FAVOURITE_POKEMONS_KEY)
+      favourites = tempFavs ? JSON.parse(tempFavs) : []
+    } catch (error) {
+      console.log(error)
+    }
+    return favourites
+  }, [])
+
   useEffect(() => {
     console.log('custom hook useManageFatourite')
-  }, [addToFavourite, removeFromFavourite, isPokemonFavourite])
+  }, [addToFavourite, removeFromFavourite, isPokemonFavourite, getFavourites])
 
-  return [addToFavourite, removeFromFavourite, isPokemonFavourite]
+  return [addToFavourite, removeFromFavourite, isPokemonFavourite, getFavourites]
 }

@@ -4,6 +4,13 @@
 
 .nav-link-div > a {
   margin-right: 20%;
-  list-style: none;
   color: white;
+  text-decoration: none;
+  text-transform: capitalize;
+  font-size: normal;
+}
+
+.nav-link-div > a:active {
+  font-size: larger;
+  font-weight: 700;
 }
