@@ -27,7 +27,8 @@ const initialState: PokemonState = {
   searchWord: '',
   filterType: '',
   sortByField: '',
-  sortOrder: 'ascending'
+  sortOrder: 'ascending',
+  offset: 0
 }
 
 const getQueryCombinationNum = (searchWord: string, filterType: string, sortOrder: string): number => {
@@ -48,6 +49,15 @@ export const pokemonSlice = createSlice({
   name: 'PokemonStore',
   initialState,
   reducers: {
+    setSearchWord: (state, action: PayloadAction<string>) => {
+      state.searchWord = action.payload
+    },
+    setFilterType: (state, action: PayloadAction<string>) => {
+      state.filterType = action.payload
+    },
+    setOffset: (state, action: PayloadAction<string>) => {
+      state.offset = Number(action.payload)
+    },
     putPokemonList: (state, action: PayloadAction<PokemonData[]>) => {
       state.allPokemons = action.payload
       state.pokemonListLenght = action.payload.length
@@ -84,6 +94,8 @@ export const pokemonSlice = createSlice({
       switch (queryCombinationNum) {
         case 1:
           if (state.queryPokemons && state.queryPokemons.length === 1) {
+            state.queryPokemons = [...state.allPokemons.slice(action.payload.offset, action.payload.offset + action.payload.limit)]
+          } else if (state.queryPokemons && state.queryPokemons.length > 1 && action.payload.offset === 0) {
             state.queryPokemons = [...state.allPokemons.slice(action.payload.offset, action.payload.offset + action.payload.limit)]
           } else {
             state.queryPokemons = [...state.queryPokemons, ...state.allPokemons.slice(action.payload.offset, action.payload.offset + action.payload.limit)]
@@ -158,7 +170,7 @@ export const pokemonSlice = createSlice({
               return false
             }).slice(action.payload.offset, action.payload.offset + action.payload.limit)]
           }
-          console.log(' case 4444')
+          console.log(' case 4')
           break
         default:
           state.queryPokemons = [...state.allPokemons.slice(action.payload.offset, action.payload.offset + action.payload.limit)]

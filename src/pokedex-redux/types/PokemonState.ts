@@ -10,4 +10,5 @@ export interface PokemonState {
   filterType: string
   sortByField: string
   sortOrder: string
+  offset: number
 }
