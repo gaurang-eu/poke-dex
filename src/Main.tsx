@@ -34,7 +34,7 @@ function Main () {
   }
 
   return (
-    <Container>
+    <Container fluid className='m-1'>
       <Header />
       <NavBar/>
       {PlaceholderLayout}

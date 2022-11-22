@@ -18,6 +18,7 @@ import LoadMore from './component/LoadMore'
 import { INITIAL_OFFSET, LIST_LIMIT } from './util/constants'
 import Search from './component/Search'
 import PokemonFilter from './component/PokemonFilter'
+import PokemonSort from './component/PokemonSort'
 
 // function App (props: { loading: boolean }) {
 function App (props: { loading: boolean }) {
@@ -28,6 +29,7 @@ function App (props: { loading: boolean }) {
   const [offset, setOffset] = useState<number>(INITIAL_OFFSET)
   const [searchWord, setSearchWord] = useState<string>('')
   const [filterType, setFilterType] = useState<string>('')
+  const [sortByField, setSortByField] = useState<string>('')
   // const { props.loading, error, data } = useQuery<PokemanResult>(getMorePokemon(-1))
   const [moreLoadingPressed, setMoreLoadingPressed] = useState<boolean>(false)
 
@@ -51,7 +53,7 @@ function App (props: { loading: boolean }) {
     setMoreLoadingPressed(false)
     dispatch(searchPokemonStateList({ offset: 0, limit: 12, searchWord, filterType }))
     setOffset(0)
-  }, [searchWord, filterType])
+  }, [searchWord, filterType, sortByField])
 
   const filterPokemonByType = useCallback((selectPokemonType: string) => {
     console.log('filterPokemonByType filterType= ' + selectPokemonType)
@@ -59,7 +61,15 @@ function App (props: { loading: boolean }) {
     dispatch(searchPokemonStateList({ offset: 0, limit: 12, searchWord, filterType: selectPokemonType }))
     setFilterType(selectPokemonType)
     setOffset(0)
-  }, [searchWord, filterType])
+  }, [searchWord, filterType, sortByField])
+
+  const sortPokemonByField = useCallback((selectedField: string) => {
+    console.log('sortPokemonByField filterType= ' + selectedField)
+    setMoreLoadingPressed(false)
+    dispatch(searchPokemonStateList({ offset: 0, limit: 12, searchWord, filterType, sortByField: selectedField }))
+    setSortByField(selectedField)
+    setOffset(0)
+  }, [searchWord, filterType, sortByField])
 
   // The reference will be used to detect list end
   const intersecObserver = useRef<IntersectionObserver | null>(null)
@@ -119,6 +129,7 @@ function App (props: { loading: boolean }) {
           <Row className="justify-content-center p-1 mb-4">
         <Search searchPokemon={searchPokemon} setSearchWord={(value: string) => { setSearchWord(value) } }/>
         <PokemonFilter filterPokemonByType={filterPokemonByType} />
+        <PokemonSort sortPokemonByField={sortPokemonByField} />
       </Row>
             )
           : null

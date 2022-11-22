@@ -85,3 +85,11 @@ export const POKEMON_TYPES = [
     name: 'Dark'
   }
 ]
+export const FILTER_LABEL = 'Filter by Type'
+export const SORT_BY_FIELDS = [
+  {
+    id: '1',
+    name: 'Pokemon Name'
+  }
+]
+export const SORT_BY_LABEL = 'Sort BY'

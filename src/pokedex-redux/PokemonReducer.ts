@@ -31,15 +31,23 @@ const initialState: PokemonState = {
   offset: 0
 }
 
-const getQueryCombinationNum = (searchWord: string, filterType: string, sortOrder: string): number => {
-  if (searchWord === '' && filterType === '' && sortOrder === '') {
+const getQueryCombinationNum = (searchWord: string, filterType: string, sortByField: string): number => {
+  if (searchWord === '' && filterType === '' && sortByField === '') {
     return 1
-  } else if (searchWord !== '' && filterType === '' && sortOrder === '') {
+  } else if (searchWord !== '' && filterType === '' && sortByField === '') {
     return 2
-  } if (searchWord !== '' && filterType !== '' && sortOrder === '') {
+  } if (searchWord !== '' && filterType !== '' && sortByField === '') {
     return 3
-  } else if (searchWord === '' && filterType !== '' && sortOrder === '') {
+  } else if (searchWord === '' && filterType !== '' && sortByField === '') {
     return 4
+  } else if (searchWord === '' && filterType === '' && sortByField !== '') {
+    return 5
+  } else if (searchWord === '' && filterType !== '' && sortByField !== '') {
+    return 6
+  } else if (searchWord !== '' && filterType === '' && sortByField !== '') {
+    return 7
+  } else if (searchWord !== '' && filterType !== '' && sortByField !== '') {
+    return 8
   } else {
     return 0
   }
@@ -85,7 +93,7 @@ export const pokemonSlice = createSlice({
         if (action.payload.filterType && action.payload.filterType !== '0') {
           filterType = action.payload.filterType
         }
-        if (action.payload.sortByField) {
+        if (action.payload.sortByField && action.payload.sortByField !== '0') {
           sortByField = action.payload.sortByField
         }
       }
@@ -136,7 +144,7 @@ export const pokemonSlice = createSlice({
                 }
               }).slice(action.payload.offset, action.payload.offset + action.payload.limit)]
             } else {
-              state.queryPokemons = [...state.queryPokemons, ...state.queryPokemons, ...state.allPokemons.filter(pokemon => {
+              state.queryPokemons = [...state.queryPokemons, ...state.allPokemons.filter(pokemon => {
                 if (pokemon.name.includes(searchWord)) {
                   const index = pokemon.types.findIndex(obj => obj.id == filterType)
                   if (index !== -1) {
@@ -171,6 +179,106 @@ export const pokemonSlice = createSlice({
             }).slice(action.payload.offset, action.payload.offset + action.payload.limit)]
           }
           console.log(' case 4')
+          break
+        case 5:
+          if (action.payload.offset === 0) {
+            state.queryPokemons = [...state.allPokemons.sort((pokemon1, pokemon2) => {
+              return (pokemon1.name < pokemon2.name) ? -1 : (pokemon1.name > pokemon2.name) ? 1 : 0
+            }).slice(action.payload.offset, action.payload.offset + action.payload.limit)]
+          } else {
+            state.queryPokemons = [...state.queryPokemons, ...state.allPokemons.filter(pokemon => {
+              const index = pokemon.types.findIndex(obj => obj.id == filterType)
+              if (index !== -1) {
+                return true
+              }
+              return false
+            }).slice(action.payload.offset, action.payload.offset + action.payload.limit)]
+          }
+          console.log(' case 5')
+          break
+        case 6:
+          if (action.payload.offset === 0) {
+            state.queryPokemons = [...state.allPokemons.sort((pokemon1, pokemon2) => {
+              return (pokemon1.name < pokemon2.name) ? -1 : (pokemon1.name > pokemon2.name) ? 1 : 0
+            }).filter(pokemon => {
+              const index = pokemon.types.findIndex(obj => obj.id == filterType)
+              if (index !== -1) {
+                return true
+              }
+              return false
+            }).slice(action.payload.offset, action.payload.offset + action.payload.limit)]
+          } else {
+            state.queryPokemons = [...state.queryPokemons, ...state.allPokemons.sort((pokemon1, pokemon2) => {
+              return (pokemon1.name < pokemon2.name) ? -1 : (pokemon1.name > pokemon2.name) ? 1 : 0
+            }).filter(pokemon => {
+              const index = pokemon.types.findIndex(obj => obj.id == filterType)
+              if (index !== -1) {
+                return true
+              }
+              return false
+            }).slice(action.payload.offset, action.payload.offset + action.payload.limit)]
+          }
+          console.log(' case 6')
+          break
+        case 7:
+          if (action.payload.offset === 0) {
+            state.queryPokemons = [...state.allPokemons.sort((pokemon1, pokemon2) => {
+              return (pokemon1.name < pokemon2.name) ? -1 : (pokemon1.name > pokemon2.name) ? 1 : 0
+            }).filter(pokemon => pokemon.name.includes(searchWord)).slice(action.payload.offset, action.payload.offset + action.payload.limit)]
+          } else {
+            state.queryPokemons = [...state.queryPokemons, ...state.allPokemons.sort((pokemon1, pokemon2) => {
+              return (pokemon1.name < pokemon2.name) ? -1 : (pokemon1.name > pokemon2.name) ? 1 : 0
+            }).filter(pokemon => pokemon.name.includes(searchWord)).slice(action.payload.offset, action.payload.offset + action.payload.limit)]
+          }
+          console.log('case 7')
+          break
+        case 8:
+          if (action.payload.offset === 0) {
+            state.queryPokemons = [...state.allPokemons.sort((pokemon1, pokemon2) => {
+              return (pokemon1.name < pokemon2.name) ? -1 : (pokemon1.name > pokemon2.name) ? 1 : 0
+            }).filter(pokemon => {
+              if (pokemon.name.includes(searchWord)) {
+                const index = pokemon.types.findIndex(obj => obj.id == filterType)
+                if (index !== -1) {
+                  return true
+                }
+                return false
+              } else {
+                return false
+              }
+            }).slice(action.payload.offset, action.payload.offset + action.payload.limit)]
+          } else {
+            if (action.payload.offset === 0) {
+              state.queryPokemons = [...state.queryPokemons, ...state.allPokemons.sort((pokemon1, pokemon2) => {
+                return (pokemon1.name < pokemon2.name) ? -1 : (pokemon1.name > pokemon2.name) ? 1 : 0
+              }).filter(pokemon => {
+                if (pokemon.name.includes(searchWord)) {
+                  const index = pokemon.types.findIndex(obj => obj.id == filterType)
+                  if (index !== -1) {
+                    return true
+                  }
+                  return false
+                } else {
+                  return false
+                }
+              }).slice(action.payload.offset, action.payload.offset + action.payload.limit)]
+            } else {
+              state.queryPokemons = [...state.queryPokemons, ...state.allPokemons.sort((pokemon1, pokemon2) => {
+                return (pokemon1.name < pokemon2.name) ? -1 : (pokemon1.name > pokemon2.name) ? 1 : 0
+              }).filter(pokemon => {
+                if (pokemon.name.includes(searchWord)) {
+                  const index = pokemon.types.findIndex(obj => obj.id == filterType)
+                  if (index !== -1) {
+                    return true
+                  }
+                  return false
+                } else {
+                  return false
+                }
+              }).slice(action.payload.offset, action.payload.offset + action.payload.limit)]
+            }
+          }
+          console.log('case 8')
           break
         default:
           state.queryPokemons = [...state.allPokemons.slice(action.payload.offset, action.payload.offset + action.payload.limit)]
