@@ -2,6 +2,15 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## open the command prompt or terminal (on mac) clone the app code on your computer
+git clone  https://github.com/gaurang-eu/poke-dex.git
+
+## Go to the folder
+cd poke-dex
+
+## install the dependency using npm or yarn ( you should have node installed)
+npm install
+
 ## Available Scripts
 
 In the project directory, you can run:
