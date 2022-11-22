@@ -1,6 +1,8 @@
 export const LIST_LIMIT = 12
 export const INITIAL_OFFSET = 0
 export const FAVOURITE_POKEMONS_KEY = 'FAVOURITE_POKEMONS'
+export const NO_INTERNET_MSG = 'No data available for now. Please check your internet connection.'
+export const NO_FAVOURITE_MSG = 'You have not yet selected any Pokemon as favourite.'
 export const POKEMON_TYPES = [
   {
     id: '18',

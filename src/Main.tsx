@@ -15,6 +15,7 @@ import AlertMessage from './component/AlertMessage'
 import { useDispatch } from 'react-redux'
 // import { RootState } from './pokedex-redux/store'
 import { putPokemonList } from './pokedex-redux/PokemonReducer'
+import { NO_INTERNET_MSG } from './util/constants'
 
 function Main () {
   const { loading, error, data } = useQuery<PokemanResult>(getMorePokemon(-1))
@@ -26,7 +27,7 @@ function Main () {
   if (loading) {
     PlaceholderLayout = <Loader />
   } else if (error != null) {
-    PlaceholderLayout = <AlertMessage message={`No data available for now. Please check your internet connection: ${error.message}`} />
+    PlaceholderLayout = <AlertMessage message={`${NO_INTERNET_MSG} Error: ${error.message}.`} />
   } else if ((data != null) && data.allPokemon) {
     dispatch(putPokemonList(data.allPokemon))
     // PlaceholderLayout =
